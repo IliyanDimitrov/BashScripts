@@ -1,0 +1,5 @@
+#Ext
+*.swp
+
+#Files
+usersCreated.log
