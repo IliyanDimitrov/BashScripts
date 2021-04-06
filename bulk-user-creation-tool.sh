@@ -29,8 +29,11 @@ function autoUserCreation() {
     #Loop through the users array and create an user with that username
     for user in "${userList[@]}"
     do  
-        #create user from the username list
-        sudo useradd $user
+        #create user with generic password from the username list
+        sudo useradd -p $(openssl passwd -1 "pa55word") $user
+
+        #Expire the user password straing away, this way the user will required to change it on first login
+        sudo passwd --expire $user
         #sudo userdel --remove $user
         #Store the usernames to the log file in a formatted manner
         printf "$(date +%D-%TUTC) %-3s$user\n" >> usersCreated.log
