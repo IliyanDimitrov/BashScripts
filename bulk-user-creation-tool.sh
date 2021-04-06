@@ -30,7 +30,7 @@ function autoUserCreation() {
     for user in "${userList[@]}"
     do  
         #create user with generic password from the username list
-        sudo useradd -p $(openssl passwd -1 "pa55word") $user
+        sudo useradd -m -p $(openssl passwd -1 "pa55word") $user
 
         #Expire the user password straing away, this way the user will required to change it on first login
         sudo passwd --expire $user
