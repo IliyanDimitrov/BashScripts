@@ -29,12 +29,17 @@ function autoUserCreation() {
     #Loop through the users array and create an user with that username
     for user in "${userList[@]}"
     do  
+        
+        sudo rm /etc/.pwd.lock
         #create user with generic password from the username list
         sudo useradd -m -p $(openssl passwd -1 "pa55word") $user
 
-        #Expire the user password straing away, this way the user will required to change it on first login
+        #Expire the user password straing away, this way the user will 
+        #need to change it on first login
         sudo passwd --expire $user
-        #sudo userdel --remove $user
+
+        #sudo userdel --remove "${user}"
+
         #Store the usernames to the log file in a formatted manner
         printf "$(date +%D-%TUTC) %-3s$user\n" >> usersCreated.log
         #remove the usernames for which a profile is created from the source file

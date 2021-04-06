@@ -18,26 +18,6 @@ function bulk_user_creation_tool() {
     autoUserCreation
 }
 
-function autoUserCreation() {
-
-    #Declaring an array that will hold the users
-    declare -a userList
-
-    #Fill the array with all the users from the text document
-    mapfile -t userList < users.txt
-
-    #Loop through the users array and create an user with that username
-    for user in "${userList[@]}"
-    do  
-        #create user from the username list
-        sudo useradd $user
-        #sudo userdel --remove $user
-        #Store the usernames to the log file in a formatted manner
-        printf "$(date +%D-%TUTC) %-3s$user\n" >> usersCreated.log
-        #remove the usernames for which a profile is created from the source file
-        sed -i "/${user}/d" users.txt
-    done
-}
 
 function newUsernamesCheck() {
     while true
