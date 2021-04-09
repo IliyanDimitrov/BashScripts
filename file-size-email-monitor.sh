@@ -1,35 +1,35 @@
 #!/bin/bash
 
-function bulk_user_creation_tool() {
-    
-    #Program purpose message
-    echo "Bulk user creation tool v1.0"
-    echo "Author: I.D.(2014447)"
-    
-    #Leave an empty line
-    echo ""
+#Program purpose message
+echo "File Size Email Monitor v1.0"
+echo "Author: I.D.(2014447)"
 
-    #Checking if the log file is empty and if true add headers
-    if [ ! -s usersCreated.log ] 
-    then
-        printf "Creation Date %-10sUsername\n" > usersCreated.log
-    fi
+#Get current date and time
+currentDate=$(date +%D-%T)
 
-    autoUserCreation
-}
+#Assigning the alert trigger value to var
+#If no arg passed trigger default=50%
+if [ ! $1 ]
+then
+    usageAllertTrigger=50
+else
+    usageAllertTrigger=$1
+fi
 
+#Getting the total usage percentage and saving it againt variable
+#And converted the string to numeric value
+totalUsage=$(df -h --total | tail -n 1 | awk '{ print ($5+0) }')
 
-function newUsernamesCheck() {
-    while true
-    do
-        clear
-        bulk_user_creation_tool
-        compgen -u
-        sleep 10
-    done
-}
+#email alert structure
+subject="System space usage alert"
+body="System space usage at $totalUsage % \nAllert triggered at: $usageAllertTrigger %\nDate: $currentDate UTC"
+from="file-size-monitor@alert.com"
+#add more recepients sepparated by comma
+to="iliqn1994@gmail.com"
 
-newUsernamesCheck
-
-
-#https://www.tutorialkart.com/bash-shell-scripting/
+if [[ "$totalUsage" -ge "$usageAllertTrigger" ]]
+then
+    #send the email alert out
+    echo -e "Subject:${subject}\n${body}" | sendmail -f "${from}" -t "${to}"
+    echo "Alert sent: $currentDate UTC"
+fi
