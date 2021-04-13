@@ -33,7 +33,7 @@ function autoUserCreation() {
     #Loop through the users array and create an user with that username
     for user in "${userList[@]}"
     do  
-        
+        #remove .pwd.lock file as it causing the useradd command to fail execution
         sudo rm /etc/.pwd.lock
         #create user with generic password from the username list
         sudo useradd -m -p $(openssl passwd -1 "pa55word") $user
